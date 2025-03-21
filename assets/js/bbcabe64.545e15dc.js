@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksuperior_agents_docs=self.webpackChunksuperior_agents_docs||[]).push([[1850],{5720:e=>{e.exports=JSON.parse('{"metadata":{"permalink":"/superioragents-docs/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
