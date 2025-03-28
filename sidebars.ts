@@ -74,9 +74,7 @@ const sidebars: SidebarsConfig = {
             description: 'Guides and configuration for installation.',
           },
           items: [
-            'technical-reference/installation/python-setup',
-            'technical-reference/installation/dependency-setup',
-            'technical-reference/installation/config-setup',
+            'technical-reference/installation/dependency-setup'
           ],
         },
         {
@@ -89,8 +87,7 @@ const sidebars: SidebarsConfig = {
           },
           items: [
             'technical-reference/agent-setup/trading-agent',
-            'technical-reference/agent-setup/marketing-agent',
-            'technical-reference/agent-setup/config-agent',
+            'technical-reference/agent-setup/marketing-agent'
           ],
         },
         {

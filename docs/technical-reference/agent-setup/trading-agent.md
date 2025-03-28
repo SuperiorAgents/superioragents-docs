@@ -1,25 +1,20 @@
 ---
 sidebar_position: 1
+title: "Trading Agent"
 ---
 
-## Versioning Guide (Dummy Content)
+To run the trading agent
 
-This is a dummy versioning guide. In a real guide you would explain how to manage and maintain different versions of your documentation using Docusaurus. For example, you might cover:
+```bash
+# Navigate into root folder
+cd ../..
 
-- How to create a new version of your docs.
-- Best practices for maintaining historical versions.
-- Tools and commands to switch between versions.
+# Activate virtual environment
+source agent-venv/bin/activate
 
-*More detailed content will be added here...*
+# Example running command
+python -m scripts.main trading <agent_id>
 
----
+python -m scripts.main trading agent_007
+```
 
-## Internationalization (i18n) Guide (Dummy Content)
-
-This is a dummy internationalization guide. In a full guide, you would explain how to configure Docusaurus to support multiple languages, including:
-
-- Setting up language options in your configuration.
-- Creating and organizing translated files.
-- Using Docusaurus’ built-in i18n features to improve accessibility.
-
-*More detailed content will be added here...*
