@@ -92,20 +92,6 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Running Agents',
-          link: {
-            type: 'generated-index',
-            title: 'Running Agents',
-            description: 'Guides for running agents.',
-          },
-          items: [
-            'technical-reference/running-agent/cli-commands',
-            'technical-reference/running-agent/fastapi-setup',
-            'technical-reference/running-agent/docker-container',
-          ],
-        },
-        {
-          type: 'category',
           label: 'Alternative: GUI Setup',
           link: {
             type: 'generated-index',
@@ -139,8 +125,21 @@ const sidebars: SidebarsConfig = {
             description: 'Case studies on Superior Agents in action.',
           },
           items: [
-            'use-cases/case-study/cybersecurity-agent',
-            'use-cases/case-study/marketing-agent',
+            {
+              type: 'doc',
+              id: 'use-cases/case-study/cybersecurity-agent',
+              label: 'Cybersecurity Agent'
+            },
+            {
+              type: 'doc',
+              id: 'use-cases/case-study/marketing-agent',
+              label: 'Marketing Agent on X'
+            },
+            {
+              type: 'doc',
+              id: 'use-cases/case-study/trading-agent',
+              label: 'Trading Agent'
+            },
           ],
         },
         {
