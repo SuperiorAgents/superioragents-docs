@@ -38,8 +38,6 @@ Join the conversation, share your insights, and collaborate with other developer
 
 - **GitHub Repository:** [SuperiorAgents/superioragents-docs](https://github.com/SuperiorAgents/superioragents-docs)
 
-- **Demo Walkthrough:** [Walkthrough of Superior Agents - Trading Agent ](https://www.youtube.com/watch?v=q6kTvTWc4p4s)
+- **Demo Walkthrough:** [Walkthrough of Superior Agents - Trading Agent](https://www.youtube.com/watch?v=q6kTvTWc4p4s)
 
-## Articles
-
-*(Our articles will be linked here)*
+- **Research Paper:** [Generalising from Self-Produced Data: Model Training Beyond Human Constraints](https://superioragents.com/research-paper.pdf)
