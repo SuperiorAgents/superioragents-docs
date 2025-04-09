@@ -4,32 +4,60 @@ title: "System Overview"
 ---
 
 # System Overview
+## Superior Agents Architecture
 
-This document provides an overview of the system architecture, including a visual diagram and a detailed explanation of how components interact. Use this page to guide developers in understanding and extending the system.
+![Superior Agents System Architecture](/img/system-architecture.png)
 
-## Visual Diagram and Component Interaction
+## Component Details
 
-Developers are encouraged to include a visual diagram that illustrates the system's architecture and the interactions between its components. To add your own diagram and explanation, follow these steps:
+### 1. API Layer
+- **Rest API**: 
+  - Manages authentication and authorization
+  - Handles request validation and error responses
+  - Routes requests to appropriate services
 
-1. **Create or Update the Diagram:**  
-   - Create a diagram using your preferred tool (e.g., draw.io, Lucidchart, or any other diagramming software).
-   - Export the diagram as an image file (PNG, JPG, or SVG).
-   - Save the image in the `/img` folder of your Docusaurus project (for example, as `/img/system-diagram.png`).
+- **RAG API**: 
+  - Integrates with external knowledge bases
+  - Enhances responses with contextual information
+  - Supports natural language processing capabilities
+  - Provides intelligent search and retrieval functions
 
-2. **Embed the Diagram in this Page:**  
-   - Use Markdown image syntax to embed the diagram:
-     
-     ```md
-     ![System Diagram](/img/system-diagram.png)
-     ```
-     
-   - Place this image wherever it fits best within your explanation.
+- **Meta Swap API**: 
+  - Manages data transformation between different formats
+  - Supports versioning and compatibility checks
+  - Provides validation for meta-swap operations
+  - Ensures data integrity during swaps
 
-3. **Add an Explanation:**  
-   - Provide a detailed explanation of the diagram. Describe how each component interacts, what their responsibilities are, and any key integration points.
-   - You can format your explanation using Markdown headers, lists, and code blocks if needed.
+- **Notification Service**: 
+  - Supports multiple notification channels (email, SMS, push)
+  - Handles notification queuing and delivery
+  - Provides notification templates and customization
+  - Manages notification preferences and subscriptions
 
-4. **Keep It Updated:**  
-   - As the system evolves, ensure that the diagram and explanation remain current. Regularly update the content as new components are added or existing ones are modified.
+### 2. Core Services
+- **Agent Service**: 
+  - Orchestrates interactions between different services
+  - Manages agent lifecycle and state
+  - Handles agent configuration and customization
+  - Provides agent monitoring and analytics
 
----
+- **Database**: 
+  - Supports multiple data models and schemas
+  - Ensures data consistency and integrity
+  - Provides backup and recovery mechanisms
+  - Supports data migration and versioning
+
+### 3. Frontend & Client Applications
+- Supports multiple client platforms (web, mobile, desktop)
+- Handles client-side data processing and caching
+- Supports offline functionality and data synchronization
+
+## Notes
+- The system follows a modular architecture allowing for independent scaling of components
+- Each service is containerized using Docker for consistent deployment
+- Services communicate through well-defined APIs
+- The architecture supports horizontal scaling of individual components
+- Database operations are centralized through the Rest API and Agent Service
+- The system is designed for high availability and fault tolerance
+- Security is implemented at multiple layers (API, service, database)
+- The architecture supports easy integration with external systems and services 
