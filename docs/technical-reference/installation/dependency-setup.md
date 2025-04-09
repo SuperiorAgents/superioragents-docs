@@ -5,6 +5,9 @@ title: "Dependencies and Configurations"
 
 # Installation
 
+Dependencies and configuration steps required to install and set up your Superior Agent.
+
+
 🎥 [Quickstart for Setting Up a Trading Agent](https://youtu.be/q6kTvTWc4p4) 
 
 ## Requirements

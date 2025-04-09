@@ -1,9 +1,9 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 title: "Trading Agent"
 ---
 
-To run the trading agent
+In order to run your Trading Agent:
 
 ```bash
 # Navigate into root folder

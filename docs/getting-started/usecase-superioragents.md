@@ -10,6 +10,7 @@ title: "Why Superior Agents"
 Superior Agents is an innovative framework designed to empower AI to continuously improve itself through autonomous evolution. It integrates self-improving mechanisms with dynamic environments and real-time performance metrics to create agents that learn, adapt, and excel over time. Whether it's through fine-tuned code generation, robust testing, or advanced retraining loops, Superior Agents enable a new era of intelligent systems that evolve based on practical, survival-driven incentives.
 
 ## Why Superior Agents?
+![Superior Agents Why?](./img/superior-agent-intro.png)
 
 Unlike traditional AI that sticks to preset rules and limited learning cycles, Superior Agents take a more flexible, real-world approach:
 
