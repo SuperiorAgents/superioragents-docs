@@ -1,10 +1,9 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: "Marketing Agent"
 ---
 
-To run the marketing agent
-
+In order to run your Marketing Agent:
 ```bash
 # Navigate into root folder
 cd ../..

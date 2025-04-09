@@ -74,20 +74,9 @@ const sidebars: SidebarsConfig = {
             description: 'Guides and configuration for installation.',
           },
           items: [
-            'technical-reference/installation/dependency-setup'
-          ],
-        },
-        {
-          type: 'category',
-          label: 'Agent Setup',
-          link: {
-            type: 'generated-index',
-            title: 'Agent Setup',
-            description: 'Guides for setting up agents.',
-          },
-          items: [
-            'technical-reference/agent-setup/trading-agent',
-            'technical-reference/agent-setup/marketing-agent'
+            'technical-reference/installation/dependency-setup',
+            'technical-reference/installation/trading-agent',
+            'technical-reference/installation/marketing-agent'
           ],
         },
         {

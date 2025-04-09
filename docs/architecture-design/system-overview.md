@@ -3,61 +3,38 @@ sidebar_position: 1
 title: "System Overview"
 ---
 
-# System Overview
-## Superior Agents Architecture
+# Superior Agents Architecture
+
+Superior Agents is a robust, scalable AI system designed for continuous evolution and real-world impact. It brings together a powerful API layer, dynamic core services, and responsive client applications to create a self-improving ecosystem. Each component works in unison to manage data, orchestrate agent lifecycles, and support high-availability deployments.
 
 ![Superior Agents System Architecture](/img/system-architecture.png)
 
 ## Component Details
 
 ### 1. API Layer
-- **Rest API**: 
-  - Manages authentication and authorization
-  - Handles request validation and error responses
-  - Routes requests to appropriate services
-
-- **RAG API**: 
-  - Integrates with external knowledge bases
-  - Enhances responses with contextual information
-  - Supports natural language processing capabilities
-  - Provides intelligent search and retrieval functions
-
-- **Meta Swap API**: 
-  - Manages data transformation between different formats
-  - Supports versioning and compatibility checks
-  - Provides validation for meta-swap operations
-  - Ensures data integrity during swaps
-
-- **Notification Service**: 
-  - Supports multiple notification channels (email, SMS, push)
-  - Handles notification queuing and delivery
-  - Provides notification templates and customization
-  - Manages notification preferences and subscriptions
+- **REST API:**  
+  Manages authentication, authorization, request validation, and routing.
+- **RAG API:**  
+  Integrates external knowledge bases and provides intelligent search and retrieval.
+- **Meta Swap API:**  
+  Handles data transformation, versioning, and compatibility checks.
+- **Notification Service:**  
+  Manages multi-channel notifications and customizable templates.
 
 ### 2. Core Services
-- **Agent Service**: 
-  - Orchestrates interactions between different services
-  - Manages agent lifecycle and state
-  - Handles agent configuration and customization
-  - Provides agent monitoring and analytics
-
-- **Database**: 
-  - Supports multiple data models and schemas
-  - Ensures data consistency and integrity
-  - Provides backup and recovery mechanisms
-  - Supports data migration and versioning
+- **Agent Service:**  
+  Orchestrates interactions between services, manages agent state, and monitors performance.
+- **Database:**  
+  Ensures data consistency across multiple models and supports backup, recovery, and migration.
 
 ### 3. Frontend & Client Applications
-- Supports multiple client platforms (web, mobile, desktop)
-- Handles client-side data processing and caching
-- Supports offline functionality and data synchronization
+- **Multi-Platform Support:**  
+  Delivers responsive interfaces for web, mobile, and desktop.
+- **Client-Side Processing:**  
+  Handles offline functionality, data caching, and synchronization.
 
-## Notes
-- The system follows a modular architecture allowing for independent scaling of components
-- Each service is containerized using Docker for consistent deployment
-- Services communicate through well-defined APIs
-- The architecture supports horizontal scaling of individual components
-- Database operations are centralized through the Rest API and Agent Service
-- The system is designed for high availability and fault tolerance
-- Security is implemented at multiple layers (API, service, database)
-- The architecture supports easy integration with external systems and services 
+Additional notes:
+- The modular design allows independent scaling of each service.
+- Containerization via Docker ensures consistent deployments.
+- Services communicate through well-defined APIs, supporting secure and fault-tolerant operations.
+- The architecture supports easy integration with external systems and services.

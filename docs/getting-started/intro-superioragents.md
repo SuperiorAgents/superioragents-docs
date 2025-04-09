@@ -4,6 +4,7 @@ title: "Superior Agents 101"
 ---
 
 # Superior Agents 101
+![Superior Agents 101](./img/superior-agent-101.png)
 
 Welcome to Superior Agents 101! This page is your introduction to our framework that lets AI systems to continuously improve through evolution and real-world feedback. Unlike traditional agents that operate on fixed instructions, Superior Agents are designed to adapt, learn, and evolve—becoming increasingly capable over time.
 
