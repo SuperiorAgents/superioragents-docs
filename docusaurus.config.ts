@@ -76,7 +76,8 @@ const config: Config = {
       },
       items: [
         { to: 'docs/category/getting-started', label: 'Documentation', position: 'left' },
-        { to: '/blog', label: 'Blogs', position: 'left' },    
+        { to: '/blog', label: 'Blogs', position: 'left' },
+        { to: '/research', label: 'Research', position: 'left' },        
         {
           href: 'https://github.com/SuperiorAgents/superioragents-docs',
           label: 'GitHub',
@@ -95,6 +96,10 @@ const config: Config = {
               label: 'Documentation',
               to: '/docs/category/getting-started',
             },
+            {
+              label: 'arXiv Research Paper',
+              href: 'https://arxiv.org/abs/2504.04711',
+            },
           ],
         },
         {
@@ -110,7 +115,7 @@ const config: Config = {
             },
           ],
         },
-        {
+        { 
           title: 'More',
           items: [
             {

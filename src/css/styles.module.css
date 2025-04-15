@@ -307,3 +307,22 @@
 
   filter: brightness(0) invert(1);
 }
+
+.researchPaper {
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.pdfContainer {
+  margin-top: 1.5rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.downloadButton {
+  margin-top: 1.5rem;
+} 
