@@ -42,7 +42,6 @@ const sidebars: SidebarsConfig = {
             'architecture-design/core-components/self-improvement',
             'architecture-design/core-components/intelligence-evaluation',
             'architecture-design/core-components/intelligence-generalization',
-            'architecture-design/core-components/experimental-environment',
           ],
         },
         // Learning Loops & Feedback subcategory
@@ -116,11 +115,6 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
-              id: 'use-cases/case-study/cybersecurity-agent',
-              label: 'Cybersecurity Agent'
-            },
-            {
-              type: 'doc',
               id: 'use-cases/case-study/marketing-agent',
               label: 'Marketing Agent on X'
             },
@@ -128,6 +122,17 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'use-cases/case-study/trading-agent',
               label: 'Trading Agent'
+            },
+            {
+              type: 'category',
+              label: 'Learning Through Exploration with Agir',
+              items: [
+                'use-cases/case-study/agir/overview-agir',
+                'use-cases/case-study/agir/learning-through-expression',
+                'use-cases/case-study/agir/retraining-process',
+                'use-cases/case-study/agir/experimental-environment',
+                'use-cases/case-study/agir/experimental-protocol',
+              ],
             },
           ],
         },

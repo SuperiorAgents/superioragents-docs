@@ -1,6 +1,6 @@
 ---
-sidebar_position: 2
-title: "Case Study: Cyber Security Agent"
+sidebar_position: 1
+title: "Case Study: Agir Overview"
 ---
 
 Our first implementation of the Superior Agents framework, **Agir**, demonstrates its potential in cybersecurity applications. Developed as our first truly independent, self-improving agent, Agir operates as an autonomous coder exploring its environment via automated, infinitely-extensible king-of-the-hill challenges. The system's architecture demonstrates three key principles:
