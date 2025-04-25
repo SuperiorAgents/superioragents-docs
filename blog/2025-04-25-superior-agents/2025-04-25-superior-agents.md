@@ -20,11 +20,11 @@ Now, labs like [Google DeepMind](https://x.com/GoogleDeepMind/status/19103636832
 
 ## What We've Built So Far
 
-**Core Framework Implemented**: We've open-sourced our [original architecture](https://github.com/Lexikat-Pte-Ltd/Generalisation2): an AI that autonomously strives to expand its reach and retrains based on success metrics. [Theory paper(https://arxiv.org/abs/2504.04711) is published, results incoming.
+**Core Framework Implemented**: We've open-sourced our [original architecture](https://github.com/Lexikat-Pte-Ltd/Generalisation2): an AI that autonomously strives to expand its reach and retrains based on success metrics. [Theory paper](https://arxiv.org/abs/2504.04711) is published, results incoming.
 
 **Commercial Applications**: We've also released simplified agents for crypto trading and social media management. Available to download [here](https://github.com/SuperiorAgents/superior-agents), or try the [GUI](https://superioragents.com/) here.
 
-Because while [playing Minecraft](https://minedojo.org/) or managing a vending machine company are laudable achievements for a young AI, AIs that playing Minecraft and [manage vending machines](https://arxiv.org/abs/2502.15840) are cute, if you really want to toughen one up you give it $500 and send it out to trade high-leverage perps.
+Because while [playing Minecraft](https://minedojo.org/) or [manage vending machines](https://arxiv.org/abs/2502.15840) are laudable achievements for a young AI, if you really want to toughen one up you give it $500 and send it out to trade high-leverage perps.
 
 ### ![SA screenshot ](./2.png)
 [Superioragents.com/live-agents](https://superioragents.com/live-agents)
