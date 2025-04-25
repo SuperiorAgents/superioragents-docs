@@ -12,7 +12,7 @@ tags: [Superior Agents, Reinforcement Learning, Diffusion Models, ASI]
 
 ## The Background
 
-Back in 2020, we proposed a design for AI systems that could **generate hypotheses, test them, and retrain themselves on their own results**—a critical step toward triggering an intelligence explosion. You can read the original paper here.
+Back in 2020, we proposed a design for AI systems that could **generate hypotheses, test them, and retrain themselves on their own results**—a critical step toward triggering an intelligence explosion. You can read the [original paper here](#link-needed-original-paper).
 
 Now, labs like Google DeepMind are heading in the same direction. The race is on.
 
@@ -20,7 +20,7 @@ Now, labs like Google DeepMind are heading in the same direction. The race is on
 
 **Core Framework Implemented**: We've open-sourced our original architecture: an AI that autonomously strives to expand its reach and retrains based on success metrics. Theory paper is published, results incoming.
 
-**Commercial Applications**: We've also released simplified agents for crypto trading and social media management. Available to download here, or try the GUI here.
+**Commercial Applications**: We've also released simplified agents for crypto trading and social media management. Available to [download here](#link-needed-download), or try the [GUI here](#link-needed-gui).
 
 Because while playing Minecraft or managing a vending machine company are laudable achievements for a young AI, AIs that playing Minecraft and manage vending machines are cute, if you really want to toughen one up you give it $500 and send it out to trade high-leverage perps.
 
@@ -31,7 +31,7 @@ Because while playing Minecraft or managing a vending machine company are laudab
 Now we are are going to go deeper.
 
 *   **Collect high-entropy RL data** from real-world deployments (e.g. Superior Agents);
-*   **Train models to generalise** using self-generated data via text diffusion (e.g., DiffuLLaMA, Dream 7B);
+*   **Train models to generalise** using self-generated data via text diffusion (e.g., [DiffuLLaMA](#link-needed-diffullama), [Dream 7B](#link-needed-dream7b));
 *   **Enable continuous retraining** with no-prop diffusion models.
 
 We believe this is the fastest—and only viable—route to ASI. Now we will explain why.
@@ -66,9 +66,9 @@ We are going to take this further, however. We know that grokking models - syste
 
 Grokking transformers is expensive with uncertain rewards, but diffusion models seem to grok natively straight from the get-go. Until recently there were no large text diffusion models available for experimentation, but over the past months two open source models and one closed source one have been/are being released:
 
-*   Diffullama
-*   Dream 7b
-*   Mercury
+*   [Diffullama](#link-needed-diffullama-again)
+*   [Dream 7b](#link-needed-dream7b-again)
+*   [Mercury](#link-needed-mercury)
 
 This provides the perfect opportunity to use our high-quality model-generated data to GRPO fine-tune a Dream 7b model, demonstrating that **models can generalise from data they themselves created**.
 
@@ -82,4 +82,4 @@ Regular back-propagation models are hard to retrain because the links between pa
 
 We are currently raising funds and hiring people with MLops and AI engineering skills.
 
-If you have access to the former or the latter, please message us: jen@eigenform.ai. 
+If you have access to the former or the latter, please message us: [jen@eigenform.ai](mailto:jen@eigenform.ai). 
