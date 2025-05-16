@@ -2,11 +2,160 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://SuperiorAgents.github.io/superioragents-docs/blog</id>
     <title>Superior Agents Docs Blog</title>
-    <updated>2025-04-25T00:00:00.000Z</updated>
+    <updated>2025-05-15T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://SuperiorAgents.github.io/superioragents-docs/blog"/>
     <subtitle>Superior Agents Docs Blog</subtitle>
     <icon>https://SuperiorAgents.github.io/superioragents-docs/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Adapting Diffusion Models for No-Propagation Learning]]></title>
+        <id>https://SuperiorAgents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models</id>
+        <link href="https://SuperiorAgents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models"/>
+        <updated>2025-05-15T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[A comprehensive report on extending backprop-free “NoProp” diffusion training from image classification to text generation, covering state-of-the-art diffusion LMs, alternative learning rules, challenges, and research directions.]]></summary>
+        <content type="html"><![CDATA[<p><em>A comprehensive report on extending backprop-free “NoProp” diffusion training from image classification to text generation, covering state-of-the-art diffusion LMs, alternative learning rules, challenges, and research directions.</em></p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="introduction">Introduction<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#introduction" class="hash-link" aria-label="Direct link to Introduction" title="Direct link to Introduction">​</a></h2>
+<p>Recent research has begun exploring backpropagation-free learning methods as an alternative to the traditional gradient-descent/backpropagation algorithm. The motivation includes reducing memory overhead (since back-prop requires storing activations) and enabling more parallel or biologically plausible training (<a href="https://medium.com/" target="_blank" rel="noopener noreferrer">medium.com</a>). One promising avenue is to leverage ideas from <strong>diffusion models</strong>—generative models that iteratively refine noisy data—to train networks <strong>without</strong> standard error back-propagation.</p>
+<p>In image classification, a new method called <strong>NoProp</strong> showed that a neural network can be trained <strong>without any forward or backward propagation</strong> by having each layer learn to denoise a noisy target (here, a noisy label embedding) (<a href="https://medium.com/" target="_blank" rel="noopener noreferrer">medium.com</a>, <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">paperswithcode.com</a>).</p>
+<p>This report investigates the feasibility of extending such no-prop, diffusion-inspired training from simple labeling tasks to <strong>text generation</strong>. We review progress (2023-2025) on diffusion models for language, summarize no-propagation learning techniques, and assess how diffusion architectures might be adapted to support training without traditional backprop. We also discuss existing implementations, theoretical support, and key challenges, comparing them to conventional paradigms.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="diffusion-models-in-text-generation-background">Diffusion Models in Text Generation (Background)<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#diffusion-models-in-text-generation-background" class="hash-link" aria-label="Direct link to Diffusion Models in Text Generation (Background)" title="Direct link to Diffusion Models in Text Generation (Background)">​</a></h2>
+<p>Diffusion models have emerged as a powerful class of generative models—first in image synthesis, and more recently in text.</p>
+<p>In text generation they are typically used in a <strong>non-autoregressive (NAR)</strong> setting: the model generates an entire sequence through parallel or iterative refinement rather than token-by-token autoregression. A forward <em>noising</em> process gradually corrupts a text representation; a neural model is trained to reverse this process, transforming noise back into coherent text. A 2023 survey showed that introducing diffusion models into NAR text generation significantly narrows the gap with traditional autoregressive transformers (<a href="https://ar5iv.org/" target="_blank" rel="noopener noreferrer">ar5iv.org</a>).</p>
+<p>Two main paradigms exist:</p>
+<ol>
+<li><strong>Discrete diffusion</strong> (operating directly on token sequences)</li>
+<li><strong>Continuous/embedding diffusion</strong> (adding noise in a continuous space)</li>
+</ol>
+<p>Embedding diffusion has proven more effective and flexible (<a href="https://aclanthology.org/" target="_blank" rel="noopener noreferrer">ACL Anthology</a>). The workflow:</p>
+<ol>
+<li>Define an embedding for each token/sequence.</li>
+<li>Add Gaussian noise over a series of timesteps.</li>
+<li>Train a model to gradually remove the noise.</li>
+</ol>
+<p>Because the denoised output is continuous, an <strong>encoder–decoder bridge</strong> is required: map discrete tokens → embeddings → <strong>diffusion</strong> → denoised embeddings → tokens (e.g. via arg-max over a vocabulary projection). Regularization (e.g. the <em>anchor loss</em> in <strong>Difformer</strong>) prevents the embedding space from collapsing (<a href="https://aclanthology.org/" target="_blank" rel="noopener noreferrer">ACL Anthology</a>).</p>
+<p><strong>Key examples</strong></p>
+<ul>
+<li><strong>DiffuSeq</strong> (ICLR 2023): sequence-to-sequence diffusion for translation &amp; paraphrasing (<a href="https://github.com/diffuseq" target="_blank" rel="noopener noreferrer">GitHub</a>).</li>
+<li><strong>Diffusion-LM</strong> (NeurIPS 2022): controllable text generation via latent-space diffusion (<a href="https://github.com/Diffusion-LM" target="_blank" rel="noopener noreferrer">GitHub</a>).</li>
+<li><strong>FlowSeq / Flow matching</strong> (EACL 2024): treats generation as an ODE that transports noisy text embeddings to clean embeddings in a few large steps (<a href="https://aclanthology.org/" target="_blank" rel="noopener noreferrer">ACL Anthology</a>).</li>
+</ul>
+<p>These advances have reduced required diffusion steps from hundreds to ∼10-20, making diffusion LMs practical. <strong>All</strong> are still trained with standard backprop—raising the question: <em>Can we train such models without backprop</em>?</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="no-propagation-learning-techniques-background">No-Propagation Learning Techniques (Background)<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#no-propagation-learning-techniques-background" class="hash-link" aria-label="Direct link to No-Propagation Learning Techniques (Background)" title="Direct link to No-Propagation Learning Techniques (Background)">​</a></h2>
+<p><strong>No-prop</strong> (no-backprop) learning avoids global gradient propagation.</p>
+<ul>
+<li><strong>Forward-Forward (FF) algorithm</strong> (<a href="https://cs.toronto.edu/" target="_blank" rel="noopener noreferrer">cs.toronto.edu</a>): two forward passes (positive vs. negative data) adjust weights via a local goodness measure.</li>
+<li><strong>Target propagation</strong> (<a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">paperswithcode.com</a>): propagate <em>targets</em> (desired activations) instead of gradients.</li>
+<li><strong>Feedback alignment</strong>: random feedback weights replace exact gradient transposes.</li>
+<li><strong>Zeroth-order (ZO) optimization</strong> (<a href="https://arxiv.org/" target="_blank" rel="noopener noreferrer">arXiv</a>): evolutionary strategies / finite-difference updates using only forward passes.</li>
+<li><strong>Greedy layer-wise training</strong>: train one layer (or block) at a time (e.g. stacked autoencoders).</li>
+</ul>
+<p>Despite decades of effort, none matched the ease/performance of backprop on large tasks—until <strong>NoProp</strong> (Li, Teh &amp; Pascanu 2025), a <strong>gradient-free method inspired by denoising diffusion</strong> (<a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">paperswithcode.com</a>).</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="how-noprop-works-in-image-classification">How NoProp Works in Image Classification<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#how-noprop-works-in-image-classification" class="hash-link" aria-label="Direct link to How NoProp Works in Image Classification" title="Direct link to How NoProp Works in Image Classification">​</a></h3>
+<ol>
+<li><strong>Label embedding space:</strong> each class label = learnable vector (not one-hot).</li>
+<li><strong>Add Gaussian noise</strong> at multiple levels—one level per layer.</li>
+<li><strong>Layer $t$</strong> receives the noisy label from layer $t!-!1$ plus the original image <em>x</em>, and learns to predict the clean label embedding (MSE loss).</li>
+</ol>
+<p>Because each layer is trained <strong>in isolation</strong> (fixed noise level, local loss), <strong>no forward/backward pass through the full network is needed</strong>. Layers could even train in parallel.</p>
+<p><strong>Results:</strong> NoProp matched backprop accuracy on MNIST/CIFAR-10 with ≈ ½ GPU memory and faster training (<a href="https://medium.com/" target="_blank" rel="noopener noreferrer">medium.com</a>). It outperformed previous no-backprop methods in both accuracy and simplicity—providing a blueprint for gradient-free training.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="adapting-diffusion-no-prop-techniques-to-text-generation">Adapting Diffusion No-Prop Techniques to Text Generation<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#adapting-diffusion-no-prop-techniques-to-text-generation" class="hash-link" aria-label="Direct link to Adapting Diffusion No-Prop Techniques to Text Generation" title="Direct link to Adapting Diffusion No-Prop Techniques to Text Generation">​</a></h2>
+<p>Extending no-prop to text is promising yet challenging.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1--representation-of-text-for-diffusion">1  Representation of Text for Diffusion<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#1--representation-of-text-for-diffusion" class="hash-link" aria-label="Direct link to 1  Representation of Text for Diffusion" title="Direct link to 1  Representation of Text for Diffusion">​</a></h3>
+<ul>
+<li>Convert sentences to continuous embeddings (pretrained or learned).</li>
+<li>Assign each layer a fixed noise level; train it to denoise toward clean embeddings (either one-step-to-clean or step-wise targets).</li>
+<li>Decode final embeddings to tokens via a vocabulary projection. The decoder itself could be trained via a diffusion-style objective or separately with simple supervision.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2--model-architecture-for-text-denoising">2  Model Architecture for Text Denoising<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#2--model-architecture-for-text-denoising" class="hash-link" aria-label="Direct link to 2  Model Architecture for Text Denoising" title="Direct link to 2  Model Architecture for Text Denoising">​</a></h3>
+<ul>
+<li><strong>Unrolled Transformer decoder:</strong> stack <strong>T</strong> distinct blocks, each a diffusion step; give each block a timestep/noise embedding.</li>
+<li>Train each block independently on (source context, noisy target) → clean target.</li>
+<li>Parameter explosion for large T: mitigate via smaller blocks, shared encoders (if conditional), or future weight-tying research.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3--feasibility-evidence">3  Feasibility Evidence<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#3--feasibility-evidence" class="hash-link" aria-label="Direct link to 3  Feasibility Evidence" title="Direct link to 3  Feasibility Evidence">​</a></h3>
+<ul>
+<li><strong>Denoising score matching</strong> (theory behind diffusion) supports stacked local denoisers (<a href="https://arxiv.org/" target="_blank" rel="noopener noreferrer">arXiv</a>).</li>
+<li><strong>Flow matching</strong> &amp; diffusion-LM successes show unrolled, non-end-to-end training can work (<a href="https://aclanthology.org/" target="_blank" rel="noopener noreferrer">ACL Anthology</a>).</li>
+<li><strong>ZO fine-tuning</strong> proves large LLMs can update without gradients, hinting memory advantages for no-prop diffusion (<a href="https://arxiv.org/" target="_blank" rel="noopener noreferrer">arXiv</a>).</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="4--key-challenges">4  Key Challenges<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#4--key-challenges" class="hash-link" aria-label="Direct link to 4  Key Challenges" title="Direct link to 4  Key Challenges">​</a></h3>
+<ol>
+<li><strong>Discrete data complexity</strong> → need robust embedding space (anchor losses, pretrained init).</li>
+<li><strong>Sequential coherence</strong> → may require self-conditioning or iterative strategies.</li>
+<li><strong>Scaling &amp; depth</strong> → many denoising steps increase parameters; continuous-time variants might share weights.</li>
+<li><strong>Noise scheduling &amp; coordination</strong> → schedule design, layer-interaction, iterative refinement without backprop.</li>
+<li><strong>Evaluation</strong> → global quality metrics for a stack of independently trained layers.</li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="5--comparisons-to-backprop-training">5  Comparisons to Backprop Training<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#5--comparisons-to-backprop-training" class="hash-link" aria-label="Direct link to 5  Comparisons to Backprop Training" title="Direct link to 5  Comparisons to Backprop Training">​</a></h3>
+<ul>
+<li><strong>Credit assignment:</strong> local (no-prop) vs. global (backprop) may yield different representation hierarchies.</li>
+<li><strong>Optimization:</strong> many independent sub-problems vs. one joint problem; hybrids (independent pre-train + light joint fine-tune) are conceivable.</li>
+<li><strong>Inference speed:</strong> fixed-T diffusion vs. token-by-token autoregression; pipeline parallelism possible.</li>
+<li><strong>Reuse of pretrained knowledge:</strong> initializing layers from pretrained transformers or embeddings can bootstrap no-prop models.</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="outlook-and-ongoing-work">Outlook and Ongoing Work<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-adapting-diffusion-models#outlook-and-ongoing-work" class="hash-link" aria-label="Direct link to Outlook and Ongoing Work" title="Direct link to Outlook and Ongoing Work">​</a></h2>
+<p>As of early 2025, no published no-prop text generator exists, but building blocks are ready:</p>
+<ul>
+<li>Small-scale proofs-of-concept (limited-vocabulary autoencoders) are likely next.</li>
+<li>Improved local-loss algorithms (e.g. “Trifecta” stabilizers for forward-forward) will aid no-prop diffusion (<a href="https://medium.com/" target="_blank" rel="noopener noreferrer">medium.com</a>).</li>
+<li>Embedding-space safeguards (anchor loss) and step-distillation can transfer directly.</li>
+<li>Biological inspiration: no-prop diffusion resembles cortical iterative denoising loops (<a href="https://cs.toronto.edu/" target="_blank" rel="noopener noreferrer">cs.toronto.edu</a>).</li>
+</ul>
+<p>If engineering hurdles are cleared—scaling, coherence, efficiency—we could see new language models trained in a highly distributed, memory-light fashion, offering novel generalization properties. The next 1-2 years will be pivotal for backprop-free generative modeling, with text generation as a key benchmark.</p>
+<hr>]]></content>
+        <author>
+            <name>Jen D.</name>
+        </author>
+        <category label="Superior Agents" term="Superior Agents"/>
+        <category label="Research" term="Research"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Less Data, More Intelligence: How Curated Training Data Unlocks LLM Power]]></title>
+        <id>https://SuperiorAgents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence</id>
+        <link href="https://SuperiorAgents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence"/>
+        <updated>2025-05-15T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Exploring how carefully curated, minimal datasets can unlock powerful LLM capabilities and reduce training costs.]]></summary>
+        <content type="html"><![CDATA[<p><em>Exploring how carefully curated, minimal datasets can unlock powerful LLM capabilities and reduce training costs.</em></p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="introduction">Introduction<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence#introduction" class="hash-link" aria-label="Direct link to Introduction" title="Direct link to Introduction">​</a></h2>
+<p>Training large language models (LLMs) has traditionally been a game of scale—ingesting massive datasets to coax out higher performance. However, a growing body of research shows that <strong>what</strong> data you use can matter more than <strong>how much</strong>.<br>
+<!-- -->A 2025 study from Shanghai Jiao Tong University revealed that a 32-billion-parameter model fine-tuned on only <strong>817 carefully selected examples</strong> learned complex mathematical-reasoning tasks—matching or beating models trained on <strong>hundreds of thousands</strong> of examples (<a href="https://venturebeat.com/ai/researchers-find-you-dont-need-a-ton-of-data-to-train-llms-for-reasoning-tasks/" target="_blank" rel="noopener noreferrer">VentureBeat report</a>).</p>
+<p>This article explains how small, high-quality datasets dramatically improve LLMs, surveys other work on data efficiency and few-shot learning, and outlines techniques for “doing more with less”—from judicious repetition and code augmentation to relaxed data filters. We also discuss cost, data-scarcity, and ethical implications, and highlight future directions for data-efficient LLM training.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="less-is-more--complex-reasoning-from-a-tiny-dataset">“Less Is More” – Complex Reasoning from a Tiny Dataset<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence#less-is-more--complex-reasoning-from-a-tiny-dataset" class="hash-link" aria-label="Direct link to “Less Is More” – Complex Reasoning from a Tiny Dataset" title="Direct link to “Less Is More” – Complex Reasoning from a Tiny Dataset">​</a></h2>
+<p>The “<strong>LIMO</strong>” (Less Is More) study fine-tuned Qwen-2.5 on just 817 expert-curated math problems yet hit <strong>57.1 %</strong> on the AIME competition and <strong>94.8 %</strong> on MATH—results that previously required 100× more data (<a href="https://ar5iv.org/abs/2401.11405" target="_blank" rel="noopener noreferrer">ar5iv preprint</a>).<br>
+<!-- -->Key to LIMO’s success was an aggressive curation pipeline that sifted millions of synthetic problems down to “cognitive templates” demonstrating step-by-step chain-of-thought solutions. Because modern LLMs already possess vast latent knowledge from pre-training, a handful of exemplars can unlock sophisticated reasoning skills.</p>
+<p>This echoes Meta AI’s <strong>LIMA</strong> (“Less Is More for Alignment”) work, where 1 000 high-quality prompt-response pairs tuned a large model to human-preferred outputs as reliably as datasets orders of magnitude larger (<a href="https://huggingface.co/blog/lima" target="_blank" rel="noopener noreferrer">Hugging Face blog</a>). Together, LIMO and LIMA underscore a simple principle: <strong>a small batch of the right data beats a mountain of mediocre data</strong>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="quality-over-quantity-data-efficiency-in-practice">Quality Over Quantity: Data Efficiency in Practice<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence#quality-over-quantity-data-efficiency-in-practice" class="hash-link" aria-label="Direct link to Quality Over Quantity: Data Efficiency in Practice" title="Direct link to Quality Over Quantity: Data Efficiency in Practice">​</a></h2>
+<p>Microsoft Research’s <strong>Phi-1</strong> (“Textbooks Are All You Need”) trained a 1.3 B model on <strong>6 B tokens</strong> of textbook-style text and code—outperforming models 10× larger trained on 100× more tokens (<a href="https://medium.com/@msr_research/phi-1-textbooks-are-all-you-need-4f4314d7242e" target="_blank" rel="noopener noreferrer">Phi-1 write-up</a>).<br>
+<!-- -->Empirical tests confirm that halving dataset <strong>quality</strong> harms performance more than halving its <strong>size</strong>; modest duplication (≈25 % repeat) can even help, whereas indiscriminate repetition quickly overfits (<a href="https://arxiv.org/abs/2305.07759" target="_blank" rel="noopener noreferrer">TinyStories study, arXiv</a>).</p>
+<p>Training on endless web text is costly and energy-intensive. Phi-1’s entire run reportedly cost <strong>&lt; $1 200</strong>, while LIMO’s 817-sample fine-tune is feasible for small labs. Crucially, curation assures <strong>coverage</strong>: LIMO’s examples span diverse techniques and difficulties; LIMA’s prompts cover many domains and styles. High-coverage, high-quality micro-datasets punch far above their weight.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="few-shot-learning-versus-small-batch-fine-tuning">Few-Shot Learning versus Small-Batch Fine-Tuning<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence#few-shot-learning-versus-small-batch-fine-tuning" class="hash-link" aria-label="Direct link to Few-Shot Learning versus Small-Batch Fine-Tuning" title="Direct link to Few-Shot Learning versus Small-Batch Fine-Tuning">​</a></h2>
+<p>GPT-3 popularised <strong>in-context few-shot learning</strong>—solving new tasks from a few prompt examples. Yet prompts are length-limited and results can vary. <strong>Small-batch fine-tuning</strong> (≤ 1 000 examples) permanently aligns model weights and often outperforms prompting.</p>
+<p>Methods like <strong>LoRA</strong> update only low-rank adapters, preventing over-fitting in scarce-data regimes. LIMO fine-tuned Qwen-2.5 on chain-of-thought exemplars so it now <em>generates</em> its own reasoning steps for unseen problems—no long prompts required.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="strategies-for-training-llms-with-limited-data">Strategies for Training LLMs with Limited Data<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence#strategies-for-training-llms-with-limited-data" class="hash-link" aria-label="Direct link to Strategies for Training LLMs with Limited Data" title="Direct link to Strategies for Training LLMs with Limited Data">​</a></h2>
+<ol>
+<li><strong>Curate High-Quality Examples</strong> – correctness, diversity, task coverage.</li>
+<li><strong>Moderate Repetition &amp; Augmentation</strong> – light duplication or paraphrases boost signal; avoid heavy overfit.</li>
+<li><strong>Include Code / Structured Data</strong> – mixing a little high-quality code improves logic and planning skills (<a href="https://notes.aimodels.fyi/code-training-benefits" target="_blank" rel="noopener noreferrer">Cohere findings</a>).</li>
+<li><strong>Relax Filters Judiciously</strong> – when data-starved, keep borderline but relevant samples (after manual review).</li>
+<li><strong>Generate Synthetic Data</strong> – projects like <strong>Alpaca</strong> expanded 52 K instruction pairs from a handful of seeds using GPT-3.5 (<a href="https://crfm.stanford.edu/2023/03/13/alpaca.html" target="_blank" rel="noopener noreferrer">Stanford post</a>).</li>
+</ol>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="implications-cost-scarcity-ethics">Implications: Cost, Scarcity, Ethics<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence#implications-cost-scarcity-ethics" class="hash-link" aria-label="Direct link to Implications: Cost, Scarcity, Ethics" title="Direct link to Implications: Cost, Scarcity, Ethics">​</a></h2>
+<p>Data-efficient training <strong>democratises</strong> LLM development—start-ups and academics can fine-tune potent models for a few hundred dollars. As high-quality web text dwindles, smart data use will extend progress without vast new crawls.</p>
+<p>Curated micro-datasets also enable tighter <strong>ethical control</strong>—easier to exclude toxic or private content and audit for bias. But selection bias rises: a tiny set may over-represent curators’ viewpoints. Privacy risks increase when fine-tuning on very small sensitive corpora; techniques like differential privacy or federated learning help mitigate memorisation.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="future-directions">Future Directions<a href="https://superioragents.github.io/superioragents-docs/blog/2025-05-15-less-data-more-intelligence#future-directions" class="hash-link" aria-label="Direct link to Future Directions" title="Direct link to Future Directions">​</a></h2>
+<ul>
+<li><strong>Automated Data Selection</strong> – frameworks like GREATS rank candidate examples for maximal learning (<a href="https://openreview.net/forum?id=Wk05uJwYjX" target="_blank" rel="noopener noreferrer">OpenReview</a>).</li>
+<li><strong>Hybrid RL + Tiny Supervision</strong> – seed with curated data, then self-play or AI-generated challenges to scale.</li>
+<li><strong>Teacher-Student Distillation</strong> – larger models create compact, information-dense “textbooks” for smaller learners.</li>
+<li><strong>Bias/Privacy Auditing Tools</strong> – essential when each example wields outsized influence.</li>
+</ul>
+<p>The age of <strong>data craftsmanship</strong> is here: less, done right, truly can be more.</p>]]></content>
+        <author>
+            <name>Jen D.</name>
+        </author>
+        <category label="Superior Agents" term="Superior Agents"/>
+        <category label="Research" term="Research"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[What's Next: No supervision. No benchmarks. No limits.]]></title>
         <id>https://SuperiorAgents.github.io/superioragents-docs/blog/2025-04-25-superior-agents</id>
@@ -70,9 +219,7 @@
             <name>Jen D.</name>
         </author>
         <category label="Superior Agents" term="Superior Agents"/>
-        <category label="Reinforcement Learning" term="Reinforcement Learning"/>
-        <category label="Diffusion Models" term="Diffusion Models"/>
-        <category label="ASI" term="ASI"/>
+        <category label="Research" term="Research"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[Superior Agents Reimagining AI with Darwinian Self-Improvement]]></title>
