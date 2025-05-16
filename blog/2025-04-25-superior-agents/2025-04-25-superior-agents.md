@@ -2,7 +2,7 @@
 slug: 2025-04-25-superior-agents
 title: "What's Next: No supervision. No benchmarks. No limits."
 authors: [jen]
-tags: [Superior Agents, Reinforcement Learning, Diffusion Models, ASI]
+tags: [Superior Agents, research]
 ---
 *Our AI systems generate high-entropy reinforcement learning data through real-world interactions, abstract and generalise via text diffusion models, and continuously retrain using no-propagation techniques. We're building a self-contained loop of autonomous improvement: this is artificial super-intelligence.*
 

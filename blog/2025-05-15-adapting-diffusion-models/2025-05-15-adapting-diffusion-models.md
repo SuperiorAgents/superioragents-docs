@@ -2,7 +2,7 @@
 slug: 2025-05-15-adapting-diffusion-models
 title: Adapting Diffusion Models for No-Propagation Learning
 authors: [jen]
-tags: [Diffusion, NoProp, TextGeneration]
+tags: [Superior Agents, research]
 ---
 
 *A comprehensive report on extending backprop-free “NoProp” diffusion training from image classification to text generation, covering state-of-the-art diffusion LMs, alternative learning rules, challenges, and research directions.*

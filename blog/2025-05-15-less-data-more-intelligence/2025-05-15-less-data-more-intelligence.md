@@ -2,7 +2,7 @@
 slug: 2025-05-15-less-data-more-intelligence
 title: Less Data, More Intelligence: How Curated Training Data Unlocks LLM Power
 authors: [jen]
-tags: [LLM, DataEfficiency]
+tags: [Superior Agents, research]
 ---
 
 *Exploring how carefully curated, minimal datasets can unlock powerful LLM capabilities and reduce training costs.*
