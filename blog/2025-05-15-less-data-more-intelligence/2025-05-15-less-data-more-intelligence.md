@@ -1,6 +1,6 @@
 ---
 slug: 2025-05-15-less-data-more-intelligence
-title: Less Data, More Intelligence: How Curated Training Data Unlocks LLM Power
+title: "Less Data, More Intelligence: How Curated Training Data Unlocks LLM Power"
 authors: [jen]
 tags: [Superior Agents, research]
 ---
